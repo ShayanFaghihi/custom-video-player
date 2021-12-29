@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
+
+*,*::after,*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 3vmin;
+}
+
+body {
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23000000' fill-opacity='0.1' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    color: #333;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: min(80%,1000px);
+    margin: 0 auto;
+    position: relative;
+}
+
+
+/* Video Player Styles */
+#videoContainer {
+    width: 100%;
+    position: relative;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+
+/* Controller Show or Hide */
+.controls-show {
+    width: 100%;
+    height: 200px;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Controllers Box */
+.video-controller {
+    background-color: rgb(0 0 0 / 70%);
+    width: 100%;
+    padding: 10px 1rem;
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity .5s ease-in-out 1s;
+}
+
+.controls-show:hover .video-controller {
+    opacity: 1;
+    transition: all .2s ease-in;
+}
+
+/* Timeline */
+#video-timeline {
+    width:100%;
+    height: 7px;
+    background-color: #929292;
+    border-radius: 7px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 1rem;
+    transition: height 100ms ease-in;
+}
+
+.video-timeline__active {
+    position: absolute;
+    height: 7px;
+    border-radius: 7px;
+    background-color: blueviolet;
+    transition: all 100ms ease-in;
+}
+
+#video-timeline:hover,
+#video-timeline:hover .video-timeline__active {
+    height: 10px;
+}
+
+/* Video Triggers ans Icons */
+.fas {
+    color: #fff;
+    cursor: pointer;
+}
+.video-controller__triggers {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* Left */
+.controllers__left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.controllers__left .fas {
+    margin-right: 20px;
+    font-size: 35px;
+    width: 30px;
+}
+
+#volume-line {
+    display: inline-block;
+    background-color: #929292;
+    width:100px;
+    height:5px;
+    position: relative;
+    border-radius: 7px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.volume-line__active {   
+    position: absolute;
+    width:100%;
+    height: 5px;
+    background-color: #fff;
+    border-radius: 7px;
+    transition: width .5s ease-in-out;
+}
+
+#volume-line:hover .volume-line__active {
+    background-color: blueviolet;
+}
+
+
+/* Right */
+.controllers__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controllers__right div {
+    margin-right: 1rem;
+}
+
+.controllers__right #speed-control {
+    background-color: transparent;
+    border:none;
+    color: #fff;
+    font-size: .7rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.controllers__right #speed-control option {
+    background-color: rgb(37, 37, 37);
+    color: #fff;
+    font-size: .6rem;
+    cursor: pointer;
+}
+
+.controllers__right .timing-view span {
+    font-size: .7rem;
+    color: #fff;
+}

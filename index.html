@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <title>Video Player</title>
+</head>
+<body>
+    <div class="container">
+        <video id="videoContainer" playsinline>
+            <source src="assets/Video.mp4" type="video/mp4">
+        </video>
+        <!-- Video Controllers - Are triggered using hover effect -->
+        <div class="controls-show">
+            <div class="video-controller">
+                <!-- Timeline -->
+                <div id="video-timeline">
+                    <div class="video-timeline__active"></div>
+                </div>
+                <!-- Icons and buttons -->
+                <div class="video-controller__triggers">
+                    <div class="controllers__left">
+                        <i class="fas fa-play" id="play"></i>
+                        <i class="fas fa-volume-up" id="volume"></i>
+                        <div id="volume-line">
+                            <div class="volume-line__active"></div>
+                        </div>
+                    </div> <!--End of left triggers-->
+    
+                    <div class="controllers__right">
+                        <!-- Speed Control Option -->
+                        <div class="speed-control">
+                            <label for="speed-control"></label>
+                            <select name="speed-control" id="speed-control">
+                                <option value="0.5">0.5 X</option>
+                                <option value="0.75">0.75 X</option>
+                                <option value="1" selected>1.0 X</option>
+                                <option value="1.5">1.5 X</option>
+                                <option value="2">2 X</option>
+                                <option value="2.5">2.5 X</option>
+                            </select>
+                        </div>
+                        <!-- Timing View -->
+                        <div class="timing-view">
+                            <span id="time">0:00</span>
+                            /
+                            <span id="duration"></span>
+                        </div>
+                        <!-- Full Screen -->
+                        <div class="full-screen">
+                            <i class="fas fa-expand" id="fullScreen"></i>
+                        </div>
+                    </div> <!--End of right triggers-->
+                </div> <!--End of bottom triggers and icons-->
+            </div> <!--End of controllers-->
+        </div> <!--End of Show Controls-->
+    </div>
+    
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
