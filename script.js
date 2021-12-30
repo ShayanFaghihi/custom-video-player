@@ -1,4 +1,5 @@
-const videoContainer = document.getElementById("videoContainer");
+const container = document.querySelector(".container");
+const video = document.getElementById("videoContainer");
 const playBtn = document.getElementById("play");
 const controllerBox = document.querySelector(".video-controller");
 const volumeSpeaker = document.getElementById("volume");
@@ -13,108 +14,138 @@ const videoTimelineActive = document.querySelector("#video-timeline .video-timel
 
 let videoSpeedRate = 1;
 let currentVolume = 1;
+let isFullScreen = false;
+
 
 // Play or Pause The Video
 const playAndPause = () => {
-    if(videoContainer.paused) {
+    if(video.paused) {
         playBtn.classList.replace('fa-play','fa-pause');
-        videoContainer.play();
+        video.play();
     } else {
         playBtn.classList.replace('fa-pause','fa-play');
-        videoContainer.pause();
+        video.pause();
     }
 }
 
 // Make video full screen
-const makeFullScreen = () => {
-    if (videoContainer.requestFullscreen) {
-        videoContainer.requestFullscreen();
-      } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
-        videoContainer.webkitRequestFullscreen();
-      } else if (videoContainer.msRequestFullscreen) { /* IE11 */
-        videoContainer.msRequestFullscreen();
+const makeFullScreen = elem => {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
       }
+    video.classList.add('is-full-screen');
+    isFullScreen = true;
 }
 
+const closeFullScreen = () => {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+      }
+    video.classList.remove('is-full-screen');
+    isFullScreen = false;
+}
+
+const changeScreen = () => {
+    if(!isFullScreen) {
+        makeFullScreen(container);
+    } else {
+        closeFullScreen();
+    }
+}
+
+
 // Change Video Speed Rate
-const changeVideoRate = (e) => {
-    videoSpeedRate = Number(e.srcElement.value);
-    videoContainer.playbackRate = videoSpeedRate;
+const changeVideoRate = () => {
+    videoSpeedRate = speedControll.value;
+    video.playbackRate = videoSpeedRate;
 }
 
 
 // Updating Video Time and Duration
-videoContainer.onplay = () => {
-    setInterval(() => {
-        let minute = Math.floor(videoContainer.currentTime / 60);
-        let second = Math.floor(videoContainer.currentTime % 60);
-        time.textContent = `${minute}:${second < 10 ? `0${second}`: second}`;
+const updateTime = () => {
+    let minute = Math.floor(video.currentTime / 60);
+    let second = Math.floor(video.currentTime % 60);
+    time.textContent = `${minute}:${second < 10 ? `0${second}`: second}`;
 
-        // Change Interval Active Time line
-        videoTimelineActive.style.width = `${(videoContainer.currentTime / videoContainer.duration) * 100}%`
-    }, 400)
+    // Change Interval Active Time line
+    videoTimelineActive.style.width = `${(video.currentTime / video.duration) * 100}%`
 }
+
 const updateVideoDuration = () => {
-    const durationMinute = Math.floor(videoContainer.duration / 60);
-    const durationSecond = Math.floor(videoContainer.duration % 60);
+    const durationMinute = Math.floor(video.duration / 60);
+    const durationSecond = Math.floor(video.duration % 60);
     duration.textContent = `${durationMinute}:${durationSecond < 10 ? `0${durationSecond}` : durationSecond}`;
-    duration = videoContainer.duration;
 }
 
 // Update Video Time when clicking on the timeline
 const changeTimeline = (e) => {
-    const timelineWidth = videoTimeline.clientWidth;
-    const startPoint = (window.innerWidth - timelineWidth) / 2;
-    const clickedPoint = e.clientX - startPoint;
-    const pointToGo = (clickedPoint * videoContainer.duration) / timelineWidth;
-    videoContainer.currentTime = pointToGo;
-
-    // Change active color
-    videoTimelineActive.style.width = `${(clickedPoint / timelineWidth) * 100}%`;
+    const newTime = e.layerX / e.srcElement.clientWidth;
+    video.currentTime = newTime * video.duration;
 }
 
 // Mute or Unmute the video
 const muteUnmute = () => {
-    if(videoContainer.volume > 0) {
-        videoContainer.volume = 0;
-        volumeSpeaker.classList.replace('fa-volume-up','fa-volume-mute');
+    if(video.volume > 0) {
+        currentVolume = video.volume;
+        video.volume = 0;
+        volumeSpeaker.className = '';
+        volumeSpeaker.classList.add('fas','fa-volume-mute');
         volumeLineActive.style.width = '0%'
-    } else {
-        videoContainer.volume = currentVolume;
-        volumeSpeaker.classList.replace('fa-volume-mute','fa-volume-up')
-        volumeLineActive.style.width = `${currentVolume * 100}%`
+    } else if (video.volume === 0) {
+        video.volume = currentVolume;
+        changeVolumeIcon();
+        volumeLineActive.style.width = `${currentVolume * 100}%`;
     }
 }
 
 
 // Change Video Volume 
 const changevolumeSpeaker = (e) => {
-    const position = e.layerX;
-    if(position < 10) {
-        currentVolume = 0;
-        muteUnmute();
-    }else if (position < 50) {
-        volumeSpeaker.classList.replace('fa-volume-mute','fa-volume-down')
-        volumeSpeaker.classList.replace('fa-volume-up','fa-volume-down')
-        videoContainer.volume = position / 100;
-        currentVolume = position / 100;
-        volumeLineActive.style.width = `${position}%`
-    } else {
-        volumeSpeaker.classList.replace('fa-volume-mute','fa-volume-up')
-        volumeSpeaker.classList.replace('fa-volume-down','fa-volume-up')
-        videoContainer.volume = position / 100;
-        currentVolume = position / 100;
-        volumeLineActive.style.width = `${position}%`
+    let newVolume = e.offsetX / volumeLine.offsetWidth;
+    currentVolume = newVolume;
+
+    if(newVolume > .9) {
+        newVolume = 1;
+    } 
+    if(newVolume < .1) {
+        newVolume = 0;
     }
+    video.volume = newVolume;
+    volumeLineActive.style.width = `${newVolume * 100}%`
+
+    // Change Speaker Icon based on the volume 
+    changeVolumeIcon();
 }
 
 
+// Change Volume Icons
+const changeVolumeIcon = () => {
+    volumeSpeaker.className = '';
+    if (currentVolume > .7) {
+        volumeSpeaker.classList.add('fas','fa-volume-up')
+    } else if (currentVolume < .7 && currentVolume > 0) {
+        volumeSpeaker.classList.add('fas','fa-volume-down')
+    } else if (currentVolume === 0) {
+        volumeSpeaker.classList.add('fas','fa-volume-off')
+    }
+}
+
 // Event Listeners
-videoContainer.addEventListener("click", playAndPause);
+video.addEventListener("click", playAndPause);
 playBtn.addEventListener("click", playAndPause);
+video.addEventListener("timeupdate",updateTime)
+video.addEventListener("canplay", updateVideoDuration)
+video.addEventListener("ended", () => {playBtn.classList.replace('fa-pause','fa-play')})
 volumeSpeaker.addEventListener("click",muteUnmute) 
-fullScreen.addEventListener('click',makeFullScreen);
-speedControll.addEventListener('change', changeVideoRate);
-videoContainer.addEventListener('loadeddata', updateVideoDuration);
-videoTimeline.addEventListener('click', changeTimeline);
 volumeLine.addEventListener("click", changevolumeSpeaker);
+fullScreen.addEventListener('click',changeScreen);
+speedControll.addEventListener('change', changeVideoRate);
+videoTimeline.addEventListener('click', changeTimeline);
